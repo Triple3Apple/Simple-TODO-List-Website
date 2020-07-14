@@ -6,7 +6,7 @@ const todoList = document.querySelector('.todo-list');
 // Event Listeners---------------------
 
 // When clicked, addTodo func is called
-todoButton.addEventListener('click', addTodo);
+todoButton.addEventListener("click", addTodo);
 todoList.addEventListener("click", deleteCheck);
 
 
@@ -51,5 +51,28 @@ function addTodo(event) {
 }
 
 function deleteCheck(event) {
+    // to see what I am clicking on!
+    console.log(event.target);
+
+    const item = event.target;
+    // Delete todo
+    // ===    <-- means equal value and type
+    if (item.classList[0] === "trash-btn")
+    {
+        const todo = item.parentElement
+        // Animation ---
+        todo.classList.add("fall");
+        // once transition ends it will do the function below
+        todo.addEventListener("transitionend", function() {
+            todo.remove();
+        });
+        // ---
+    }
+    // Checkmark
+    if (item.classList[0] === "complete-btn")
+    {
+        const todo = item.parentElement;
+        todo.classList.toggle("completed");
+    }
 
 }
