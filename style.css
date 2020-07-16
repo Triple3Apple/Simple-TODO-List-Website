@@ -97,3 +97,47 @@ Makes the trash and checkmark icons/buttons appear next to each other
     opacity: 0;
 }
 
+/*
+To style a select, have to remove all the styles first
+*/
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    border: none;
+}
+
+.select {
+    margin: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+select {
+    color: black;
+    background: bisque;
+    width: 10rem;
+    cursor: pointer;
+    padding: 1.2rem;
+}
+.select::after {
+    content: "\25BC";   /*Adds arrow*/
+    position: relative;
+    
+    background: bisque;
+    color: #261917;
+    top: 0.15rem;
+    right: 3.15rem;
+    padding: 1rem;
+
+    /*So user cant actually click on it*/
+    pointer-events: none;
+
+    transition: all 0.3s ease;
+}
+
+.select:hover::after {
+    background: #261917;
+    color: bisque;
+}
+

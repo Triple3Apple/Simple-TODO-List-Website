@@ -1,13 +1,15 @@
 // Selectors---------------------------
-const todoInput = document.querySelector('.todo-input');
-const todoButton = document.querySelector('.todo-button');
-const todoList = document.querySelector('.todo-list');
+const todoInput = document.querySelector(".todo-input");
+const todoButton = document.querySelector(".todo-button");
+const todoList = document.querySelector(".todo-list");
+const filterOption = document.querySelector(".filter-todo");
 
 // Event Listeners---------------------
 
 // When clicked, addTodo func is called
 todoButton.addEventListener("click", addTodo);
 todoList.addEventListener("click", deleteCheck);
+filterOption.addEventListener("click", filterTodo);
 
 
 // Functions---------------------------
@@ -66,7 +68,7 @@ function deleteCheck(event) {
         todo.addEventListener("transitionend", function() {
             todo.remove();
         });
-        // ---
+        // -------------
     }
     // Checkmark
     if (item.classList[0] === "complete-btn")
@@ -74,5 +76,33 @@ function deleteCheck(event) {
         const todo = item.parentElement;
         todo.classList.toggle("completed");
     }
+
+}
+
+function filterTodo(event) {
+    const todos = todoList.childNodes;
+
+    // for each todo..
+    todos.forEach(function(todo) {
+        switch (event.target.value) {
+            case "all":
+                todo.style.display = "flex";
+                break;
+            case "completed":
+                if (todo.classList.contains("completed")) {
+                    todo.style.display = "flex";    // display
+                } else todo.style.display = "none"; // else hide it
+                break;
+            case "uncompleted":
+                if (!todo.classList.contains("completed")) {
+                    todo.style.display = "flex";    // display
+                } else todo.style.display = "none"; // else hide it
+                break;
+        }
+    });
+
+    // vvv checking if it works
+    console.log(todos);
+
 
 }
