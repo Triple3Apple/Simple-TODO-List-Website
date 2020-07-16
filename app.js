@@ -6,8 +6,9 @@ const filterOption = document.querySelector(".filter-todo");
 
 // Event Listeners---------------------
 
-// When clicked, addTodo func is called
-todoButton.addEventListener("click", addTodo);
+// DOMContentLoaded <-- when the webpage is loaded
+document.addEventListener("DOMContentLoaded", getTodos);
+todoButton.addEventListener("click", addTodo); // When clicked, addTodo func is called
 todoList.addEventListener("click", deleteCheck);
 filterOption.addEventListener("click", filterTodo);
 
@@ -28,6 +29,9 @@ function addTodo(event) {
         newTodo.innerText = todoInput.value;
         newTodo.classList.add('todo-item');
         todoDiv.appendChild(newTodo);   // appended to todoDiv
+
+        // Add todo to local storage
+        saveLocalTodos(todoInput.value);
 
         //Checkmark button (for marking task as complete)
         const completedButton = document.createElement('button');
@@ -64,6 +68,7 @@ function deleteCheck(event) {
         const todo = item.parentElement
         // Animation ---
         todo.classList.add("fall");
+        removeTodoFromLocal(todo);
         // once transition ends it will do the function below
         todo.addEventListener("transitionend", function() {
             todo.remove();
@@ -102,7 +107,92 @@ function filterTodo(event) {
     });
 
     // vvv checking if it works
-    console.log(todos);
+    //console.log(todos);
+}
 
+function saveLocalTodos(todo) {
+    // check if things are already inside
+    let todos;
+
+    // if todos array is null (not created) then intialize it
+    if (localStorage.getItem("todos") === null) {
+        todos = [];
+    } else { 
+        // get todos from local storage
+        todos = JSON.parse(localStorage.getItem("todos"));
+    }
+    // push todo to array
+    todos.push(todo);
+    // add the todos (which has the new todo inside) to local storage
+    localStorage.setItem("todos", JSON.stringify(todos));   // saving it
+}
+
+// load todos that were saved (if any) to local storage when page loads 
+function getTodos() {
+    let todos;
+
+    // if todos array is null (not created) then intialize it
+    if (localStorage.getItem("todos") === null) {
+        todos = [];
+    } else { 
+        // get todos from local storage
+        todos = JSON.parse(localStorage.getItem("todos"));
+    }
+
+    // note to self: the function inside forEach is a anonymous function
+    todos.forEach(function(todo) {
+        // todo DIV
+        const todoDiv = document.createElement('div');
+        todoDiv.classList.add("todo");
+        // create LI
+        const newTodo = document.createElement('li');
+        newTodo.innerText = todo;
+        newTodo.classList.add('todo-item');
+        todoDiv.appendChild(newTodo);   // appended to todoDiv
+
+        //Checkmark button (for marking task as complete)
+        const completedButton = document.createElement('button');
+        // we are adding to the button html code (i tag [check icon])
+        completedButton.innerHTML = '<i class="fas fa-check"></i>';
+        completedButton.classList.add("complete-btn");
+        todoDiv.appendChild(completedButton);   // appended to todoDiv
+
+        //Trash button (for deleting task)
+        const trashButton = document.createElement('button');
+        // we are adding to the button html code (i tag [check icon])
+        trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+        trashButton.classList.add("trash-btn");
+        todoDiv.appendChild(trashButton);   // appended to todoDiv
+
+        // Append to List
+        todoList.appendChild(todoDiv);
+    });
+}
+
+function removeTodoFromLocal(todo) {
+    let todos;
+
+    // if todos array is null (not created) then intialize it
+    if (localStorage.getItem("todos") === null) {
+        todos = [];
+    } else { 
+        // get todos from local storage
+        todos = JSON.parse(localStorage.getItem("todos"));
+    }
+    
+    //console.log(todo);    // getting the class of todo fall
+    //console.log(todo.children);    //[li.todo-item, button.complete-btn, button.trash-btn]
+    console.log(todo.children[0]);  // <-- good, we want the todo-item class
+
+    //console.log(todo.children[0].innerText);    // <-- better, gets the text
+    //console.log(todos.indexOf("wow"));
+
+    const todoIndex = todo.children[0].innerText;
+
+    // splice removes an element(s) from an array
+    // splice(starting position of array, how many to remove);
+    todos.splice(todos.indexOf(todoIndex), 1);
+
+    localStorage.setItem("todos", JSON.stringify(todos));   // saving it
 
 }
